@@ -94,7 +94,9 @@ namespace QLNhanVien_WPF
 				return this.GetTable<NhanVien>();
 			}
 		}
-	}
+
+        public object ChucVus { get; internal set; }
+    }
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.CHUCVU")]
 	public partial class CHUCVU : INotifyPropertyChanging, INotifyPropertyChanged

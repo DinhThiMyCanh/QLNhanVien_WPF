@@ -76,23 +76,34 @@ namespace QLNhanVien_WPF
 
         private void SuaNV(object sender, RoutedEventArgs e)
         {
-            var query = from nv in NhanViens
-                        where nv.MaNV == int.Parse(txtMaNV.Text)
-                        select nv;
-            foreach(var nv in query)
+            int maNV = int.Parse(txtMaNV.Text);
+            var nv = dc.NhanViens.SingleOrDefault(n => n.MaNV == maNV); //Truy vấn Linq theo phương thức
+
+            if (nv != null)
             {
                 nv.HoTen = txtHoTen.Text;
                 nv.NgaySinh = Convert.ToDateTime(dtpNgaySinh.Text);
-                nv.GioiTinh = rdNam.IsChecked == true ? true : false;
+                nv.GioiTinh = rdNam.IsChecked == true;
                 nv.SoDT = txtSoDT.Text;
                 nv.HeSoLuong = float.Parse(txtHSL.Text);
-                nv.MaPhong = cboTenPhong.SelectedValue.ToString();
-                nv.MaChucVu = cboChucVu.SelectedValue.ToString();
 
-                //Cập nhật dữ liệu xuống Database
+                // Gán entity
+                var phong = dc.DMPHONGs.SingleOrDefault(p => p.MaPhong == cboTenPhong.SelectedValue.ToString());
+                var chucVu = dc.CHUCVUs.SingleOrDefault(c => c.MaChucVu == cboChucVu.SelectedValue.ToString());
+
+                if (phong != null)
+                    nv.DMPHONG = phong;
+
+                if (chucVu != null)
+                    nv.CHUCVU = chucVu;
+
                 dc.SubmitChanges();
             }
-            
+            else
+            {
+                MessageBox.Show("Không tìm thấy nhân viên.");
+            }
+
             LoadNV();
 
         }
